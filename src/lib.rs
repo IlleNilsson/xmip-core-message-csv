@@ -18,7 +18,7 @@
 //! the byte where the walk stopped.
 
 use message::record::{self, Delimited, Record};
-use message::{Part, Shape, ShapeError, Shaped};
+use message::{Part, Shape, ShapeError, Shaped, parameter};
 use stream::Stream;
 
 /// The CSV shape.
@@ -42,17 +42,6 @@ impl Csv {
             .or_else(|| Delimited::sniff(bytes))
             .unwrap_or_default()
     }
-}
-
-/// The `name` parameter of a media type, unquoted.
-fn parameter<'a>(media: &'a str, name: &str) -> Option<&'a str> {
-    media.split(';').skip(1).find_map(|parameter| {
-        let (key, value) = parameter.split_once('=')?;
-        let value = value.trim();
-        key.trim()
-            .eq_ignore_ascii_case(name)
-            .then(|| value.trim_matches('"'))
-    })
 }
 
 /// Whether the field's text is a number: an optional sign, digits, at most
@@ -119,7 +108,7 @@ impl Shape for Csv {
 
     fn shape(&self, stream: &Stream) -> Result<Shaped, ShapeError> {
         let bytes = stream.bytes();
-        let refused = |(reason, at): (&str, usize)| ShapeError::new("csv", reason).at(at);
+        let refused = |stop| ShapeError::refused("csv", stop);
         record::text(bytes).map_err(refused)?;
         if bytes.is_empty() {
             return Err(refused(("no records", 0)));
