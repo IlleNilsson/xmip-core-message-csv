@@ -17,8 +17,9 @@
 //! content after a closing quote, bytes that are not text — is refused with
 //! the byte where the walk stopped.
 
+use codec::mime::parameter;
 use message::record::{self, Delimited, Record};
-use message::{Part, Shape, ShapeError, Shaped, parameter};
+use message::{Part, Shape, ShapeError, Shaped};
 use stream::Stream;
 
 /// The CSV shape.
