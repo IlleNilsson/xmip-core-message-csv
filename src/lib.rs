@@ -87,7 +87,7 @@ impl Shape for Csv {
         &["text/csv", "text/tab-separated-values", "application/csv"]
     }
 
-    fn recognises(&self, bytes: &[u8]) -> bool {
+    fn recognizes(&self, bytes: &[u8]) -> bool {
         if record::text(bytes).is_err() {
             return false;
         }
@@ -250,17 +250,17 @@ mod tests {
     }
 
     #[test]
-    fn the_shape_claims_csv_and_recognises_two_records_of_the_same_width() {
+    fn the_shape_claims_csv_and_recognizes_two_records_of_the_same_width() {
         assert_eq!(Csv::default().technology(), "csv");
         assert!(Csv::default().media_types().contains(&"text/csv"));
-        assert!(Csv::default().recognises(b"a,b,c\n1,2,3\n"));
-        assert!(Csv::default().recognises(b"a;b"));
-        assert!(Csv::default().recognises(b"\"a,b\",c\n1,2"));
-        assert!(!Csv::default().recognises(b"a,b\n1,2,3"));
-        assert!(!Csv::default().recognises(b"plain text"));
-        assert!(!Csv::default().recognises(b"a,\"b"));
-        assert!(!Csv::default().recognises(b"a,b\n\xff"));
-        assert!(!Csv::default().recognises(b""));
+        assert!(Csv::default().recognizes(b"a,b,c\n1,2,3\n"));
+        assert!(Csv::default().recognizes(b"a;b"));
+        assert!(Csv::default().recognizes(b"\"a,b\",c\n1,2"));
+        assert!(!Csv::default().recognizes(b"a,b\n1,2,3"));
+        assert!(!Csv::default().recognizes(b"plain text"));
+        assert!(!Csv::default().recognizes(b"a,\"b"));
+        assert!(!Csv::default().recognizes(b"a,b\n\xff"));
+        assert!(!Csv::default().recognizes(b""));
 
         let shapes: [&dyn Shape; 1] = [&Csv::default()];
         let by_media = message::choose(&shapes, &stream(b"x", Some("Text/CSV; header=absent")));
