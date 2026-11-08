@@ -108,7 +108,7 @@ impl Shape for Csv {
     }
 
     fn shape(&self, stream: &Stream) -> Result<Shaped, ShapeError> {
-        let bytes = stream.bytes();
+        let bytes = message::loaded(self.technology(), stream)?;
         let refused = |stop| ShapeError::refused("csv", stop);
         record::text(bytes).map_err(refused)?;
         if bytes.is_empty() {
@@ -263,10 +263,15 @@ mod tests {
         assert!(!Csv::default().recognizes(b""));
 
         let shapes: [&dyn Shape; 1] = [&Csv::default()];
-        let by_media = message::choose(&shapes, &stream(b"x", Some("Text/CSV; header=absent")));
+        let by_media =
+            message::choose(&shapes, &stream(b"x", Some("Text/CSV; header=absent"))).expect("held");
         assert_eq!(by_media.map(Shape::technology), Some("csv"));
-        let by_look = message::choose(&shapes, &stream(b"a,b\n1,2", None));
+        let by_look = message::choose(&shapes, &stream(b"a,b\n1,2", None)).expect("held");
         assert_eq!(by_look.map(Shape::technology), Some("csv"));
-        assert!(message::choose(&shapes, &stream(b"{}", None)).is_none());
+        assert!(
+            message::choose(&shapes, &stream(b"{}", None))
+                .expect("held")
+                .is_none()
+        );
     }
 }
