@@ -11,10 +11,8 @@ publish = false
 path = "src/lib.rs"
 
 [dependencies]
-# A Technology depends on its parent Capability, never the reverse
-# (repository-model.md). The Shape trait and its parts live there; the Stream
-# it shapes is the Foundation's. Standard library otherwise: a shape sections
-# content, it does not validate it.
+# The parent capability's `Shape` (`message::shape`; repository-model.md),
+# and the Stream it shapes.
 message = { package = "xmip-core-message", git = "https://github.com/IlleNilsson/xmip-core-message", branch = "main" }
 stream = { package = "xmip-core-stream", git = "https://github.com/IlleNilsson/xmip-core-stream", branch = "main" }
 # A media type's parameters, and the multipart body, as MIME reads them.
