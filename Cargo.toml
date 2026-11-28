@@ -13,13 +13,13 @@ path = "src/lib.rs"
 [dependencies]
 # The parent capability's `Shape` (`message::shape`; repository-model.md),
 # and the Stream it shapes.
-message = { package = "xmip-core-message", git = "https://github.com/IlleNilsson/xmip-core-message", branch = "main" }
-stream = { package = "xmip-core-stream", git = "https://github.com/IlleNilsson/xmip-core-stream", branch = "main" }
+message = { workspace = true }
+stream = { workspace = true }
 # A media type's parameters, and the multipart body, as MIME reads them.
-codec = { package = "xmip-core-library-codec", git = "https://github.com/IlleNilsson/xmip-core-library-codec", branch = "main" }
+codec = { workspace = true }
 
 [dev-dependencies]
-xcore = { package = "xmip-core", git = "https://github.com/IlleNilsson/xmip-core", branch = "main" }
+xcore = { workspace = true }
 
 [lints]
 workspace = true
